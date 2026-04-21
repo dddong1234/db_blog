@@ -1,0 +1,520 @@
+<style>
+.cr-wrap*{box-sizing:border-box;margin:0;padding:0}
+.cr-wrap{background:#0d1117;color:#e6edf3;font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:16px;line-height:1.75;border-radius:12px;overflow:hidden;padding-bottom:4rem}
+.cr-header{padding:4rem 2rem 3rem;border-bottom:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden}
+.cr-header::before{content:'CRUD';position:absolute;right:-10px;top:-20px;font-size:140px;font-weight:900;color:rgba(88,166,255,0.04);letter-spacing:-5px;pointer-events:none;line-height:1}
+.cr-tag{font-size:11px;letter-spacing:0.18em;color:#58a6ff;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.cr-tag::before{content:'';display:inline-block;width:20px;height:1px;background:#58a6ff}
+.cr-h1{font-size:2.4rem;font-weight:900;line-height:1.2;letter-spacing:-0.02em;color:#f0f6fc;margin-bottom:1rem}
+.cr-h1 span{color:#58a6ff}
+.cr-header-desc{font-size:0.95rem;color:#8b949e;line-height:1.8;max-width:520px}
+.cr-toc{display:flex;gap:8px;flex-wrap:wrap;padding:1.25rem 2rem;border-bottom:1px solid rgba(255,255,255,0.06)}
+.cr-toc a{font-size:11px;letter-spacing:0.08em;text-decoration:none;color:#8b949e;padding:5px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:99px;transition:all 0.2s;font-family:'Courier New',monospace}
+.cr-toc a:hover{color:#58a6ff;border-color:#58a6ff}
+.cr-main{padding:0 2rem}
+.cr-section{padding:4rem 0 0}
+.cr-section-num{font-family:'Courier New',monospace;font-size:10px;letter-spacing:0.2em;color:#58a6ff;text-transform:uppercase;margin-bottom:0.75rem}
+.cr-h2{font-size:1.9rem;font-weight:900;letter-spacing:-0.02em;color:#f0f6fc;margin-bottom:1rem;line-height:1.3}
+.cr-h3{font-size:1.1rem;font-weight:700;margin:2.5rem 0 1rem;color:#c9d1d9;padding-left:12px;border-left:2px solid #58a6ff}
+.cr-p{color:#8b949e;margin-bottom:1.1rem;line-height:1.85}
+.cr-p strong{color:#e6edf3;font-weight:600}
+.cr-divider{width:100%;height:1px;background:rgba(255,255,255,0.06);margin:3.5rem 0 0}
+
+/* code */
+.cr-code{background:#161b22;border:1px solid rgba(255,255,255,0.1);border-radius:10px;margin:1.25rem 0;overflow:hidden}
+.cr-code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#1c2128;border-bottom:1px solid rgba(255,255,255,0.08)}
+.cr-code-lang{font-family:'Courier New',monospace;font-size:11px;color:#8b949e;letter-spacing:0.1em}
+.cr-code-dots{display:flex;gap:5px}
+.cr-code-dot{width:8px;height:8px;border-radius:50%}
+.cr-code pre{padding:1.25rem 1.5rem;font-family:'JetBrains Mono','Courier New',monospace;font-size:13px;line-height:1.85;color:#e6edf3;overflow-x:auto;white-space:pre}
+.ck{color:#ff7b72}.cs{color:#a5d6ff}.cc{color:#6e7681;font-style:italic}.cf{color:#d2a8ff}.cn{color:#ffa657}.cv{color:#79c0ff}
+
+/* callout */
+.cr-callout{border-left:2px solid #58a6ff;padding:1rem 1.25rem;background:rgba(88,166,255,0.06);border-radius:0 8px 8px 0;margin:1.5rem 0}
+.cr-callout.warn{border-color:#f85149;background:rgba(248,81,73,0.06)}
+.cr-callout.tip{border-color:#3fb950;background:rgba(63,185,80,0.06)}
+.cr-callout p{margin:0;color:#c9d1d9;font-size:0.95rem;line-height:1.7}
+.cr-callout p strong{color:#e6edf3}
+
+/* CRUD 테이블 */
+.cr-crud-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:1.5rem 0}
+@media(max-width:600px){.cr-crud-grid{grid-template-columns:1fr 1fr}}
+.cr-crud-card{border-radius:12px;padding:1.25rem 1rem;text-align:center;border:1px solid rgba(255,255,255,0.08)}
+.cr-crud-card.c-card{background:rgba(63,185,80,0.08);border-color:rgba(63,185,80,0.25)}
+.cr-crud-card.r-card{background:rgba(88,166,255,0.08);border-color:rgba(88,166,255,0.25)}
+.cr-crud-card.u-card{background:rgba(255,166,0,0.08);border-color:rgba(255,166,0,0.25)}
+.cr-crud-card.d-card{background:rgba(248,81,73,0.08);border-color:rgba(248,81,73,0.25)}
+.cr-crud-letter{font-family:'Courier New',monospace;font-size:2.2rem;font-weight:900;line-height:1;margin-bottom:0.5rem}
+.c-card .cr-crud-letter{color:#3fb950}
+.r-card .cr-crud-letter{color:#58a6ff}
+.u-card .cr-crud-letter{color:#ffa657}
+.d-card .cr-crud-letter{color:#f85149}
+.cr-crud-op{font-size:13px;font-weight:600;color:#c9d1d9;margin-bottom:0.25rem}
+.cr-crud-sql{font-family:'Courier New',monospace;font-size:11px;color:#8b949e;margin-bottom:0.5rem}
+.cr-crud-desc{font-size:11px;color:#6e7681;line-height:1.5}
+
+/* CREATE 데이터타입 그리드 */
+.cr-dtype-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1.25rem 0}
+@media(max-width:600px){.cr-dtype-grid{grid-template-columns:1fr}}
+.cr-dtype-item{background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1rem}
+.cr-dtype-name{font-family:'Courier New',monospace;font-size:13px;color:#d2a8ff;font-weight:600;margin-bottom:0.35rem}
+.cr-dtype-desc{font-size:12px;color:#8b949e;line-height:1.6}
+.cr-dtype-ex{font-family:'Courier New',monospace;font-size:11px;color:#3fb950;margin-top:0.3rem}
+
+/* 제약조건 목록 */
+.cr-constraint-list{list-style:none;margin:1rem 0;display:flex;flex-direction:column;gap:8px}
+.cr-constraint-list li{display:flex;align-items:flex-start;gap:12px;background:#161b22;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px}
+.cr-constraint-kw{font-family:'Courier New',monospace;font-size:12px;color:#ffa657;font-weight:600;min-width:140px;flex-shrink:0}
+.cr-constraint-desc{font-size:13px;color:#8b949e;line-height:1.5}
+
+/* INSERT 인터랙티브 */
+.cr-insert-form{background:#161b22;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.cr-form-title{font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.15em;color:#58a6ff;text-transform:uppercase;margin-bottom:1.25rem}
+.cr-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem}
+@media(max-width:500px){.cr-form-grid{grid-template-columns:1fr}}
+.cr-form-group{display:flex;flex-direction:column;gap:5px}
+.cr-form-label{font-family:'Courier New',monospace;font-size:11px;color:#8b949e;letter-spacing:0.08em}
+.cr-form-input,.cr-form-select{background:#0d1117;border:1px solid rgba(255,255,255,0.12);border-radius:7px;padding:8px 12px;color:#e6edf3;font-family:'Courier New',monospace;font-size:13px;outline:none;transition:border 0.2s;width:100%}
+.cr-form-input:focus,.cr-form-select:focus{border-color:#58a6ff}
+.cr-form-select option{background:#161b22}
+.cr-insert-btn{width:100%;padding:12px;background:rgba(63,185,80,0.1);border:1px solid rgba(63,185,80,0.4);border-radius:8px;color:#3fb950;font-family:'Courier New',monospace;font-size:13px;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;font-weight:600}
+.cr-insert-btn:hover{background:rgba(63,185,80,0.18)}
+.cr-sql-preview{background:#0d1117;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;font-family:'Courier New',monospace;font-size:13px;line-height:1.8;min-height:80px;transition:all 0.3s}
+.cr-result-table-wrap{margin-top:1.25rem;overflow-x:auto}
+.cr-result-table{width:100%;border-collapse:collapse;font-size:12px}
+.cr-result-table th{text-align:left;padding:8px 12px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:0.1em;color:#58a6ff;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.12);background:#1c2128;font-weight:400}
+.cr-result-table td{padding:8px 12px;color:#8b949e;border-bottom:1px solid rgba(255,255,255,0.06);font-family:'Courier New',monospace;font-size:12px;transition:background 0.3s}
+.cr-result-table tr.new-row td{background:rgba(63,185,80,0.08);color:#c9d1d9}
+.cr-result-table tr.new-row td:first-child{color:#3fb950}
+.cr-result-count{font-family:'Courier New',monospace;font-size:11px;color:#8b949e;margin-top:8px;letter-spacing:0.08em}
+
+/* 실습 패널 */
+.cr-practice{background:#161b22;border:1px solid rgba(255,166,0,0.2);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.cr-practice-title{font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.15em;color:#ffa657;text-transform:uppercase;margin-bottom:1rem}
+.cr-practice ol{padding-left:1.25rem;display:flex;flex-direction:column;gap:10px}
+.cr-practice ol li{color:#8b949e;font-size:14px;line-height:1.7}
+.cr-practice ol li code{font-family:'Courier New',monospace;font-size:12px;background:rgba(255,255,255,0.07);padding:2px 7px;border-radius:4px;color:#c9d1d9}
+
+.cr-footer{padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,0.06);font-family:'Courier New',monospace;font-size:11px;color:#8b949e;letter-spacing:0.1em;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-top:3rem}
+</style>
+
+<div class="cr-wrap">
+
+<!-- HEADER -->
+<div class="cr-header">
+  <div class="cr-tag">SQL Fundamentals · 팀원4 발표</div>
+  <div class="cr-h1"><span>CRUD</span> · CREATE · INSERT</div>
+  <p class="cr-p cr-header-desc">데이터베이스의 모든 작업은 결국 이 네 가지로 귀결됩니다. 생성하고, 읽고, 수정하고, 삭제하는 것 — CRUD의 C, 그 시작을 알아봅니다.</p>
+</div>
+
+<!-- TOC -->
+<div class="cr-toc">
+  <a href="#cr-crud">01 CRUD란?</a>
+  <a href="#cr-create">02 CREATE</a>
+  <a href="#cr-insert">03 INSERT</a>
+  <a href="#cr-practice">04 실습</a>
+</div>
+
+<div class="cr-main">
+
+<!-- ═══ 01 CRUD ═══ -->
+<div class="cr-section" id="cr-crud">
+  <div class="cr-section-num">01 — CRUD</div>
+  <div class="cr-h2">CRUD란 무엇인가</div>
+  <p class="cr-p">CRUD는 데이터베이스에서 할 수 있는 <strong>4가지 기본 연산의 앞글자</strong>를 딴 용어입니다. 세상의 모든 애플리케이션은 결국 이 네 가지 조합입니다. 병원 EMR도, 인스타그램도, 카카오톡도 CRUD입니다.</p>
+
+  <div class="cr-crud-grid">
+    <div class="cr-crud-card c-card">
+      <div class="cr-crud-letter">C</div>
+      <div class="cr-crud-op">Create</div>
+      <div class="cr-crud-sql">INSERT</div>
+      <div class="cr-crud-desc">새 데이터 생성<br>환자 신규 등록</div>
+    </div>
+    <div class="cr-crud-card r-card">
+      <div class="cr-crud-letter">R</div>
+      <div class="cr-crud-op">Read</div>
+      <div class="cr-crud-sql">SELECT</div>
+      <div class="cr-crud-desc">데이터 조회<br>환자 목록 확인</div>
+    </div>
+    <div class="cr-crud-card u-card">
+      <div class="cr-crud-letter">U</div>
+      <div class="cr-crud-op">Update</div>
+      <div class="cr-crud-sql">UPDATE</div>
+      <div class="cr-crud-desc">데이터 수정<br>처방 변경 기록</div>
+    </div>
+    <div class="cr-crud-card d-card">
+      <div class="cr-crud-letter">D</div>
+      <div class="cr-crud-op">Delete</div>
+      <div class="cr-crud-sql">DELETE</div>
+      <div class="cr-crud-desc">데이터 삭제<br>퇴원 후 처리</div>
+    </div>
+  </div>
+
+  <div class="cr-callout tip">
+    <p><strong>병원 EMR로 보면:</strong> 환자 입원 등록(C) → 차팅 조회(R) → 처방 변경(U) → 퇴원 기록 삭제(D). 매일 하는 업무가 전부 CRUD입니다.</p>
+  </div>
+
+  <div class="cr-code">
+    <div class="cr-code-header">
+      <span class="cr-code-lang">SQL — CRUD 한눈에</span>
+      <div class="cr-code-dots"><div class="cr-code-dot" style="background:#f85149"></div><div class="cr-code-dot" style="background:#ffa657"></div><div class="cr-code-dot" style="background:#3fb950"></div></div>
+    </div>
+    <pre><span class="cc">-- C: 생성</span>
+<span class="ck">INSERT INTO</span> patients (name, age, dx) <span class="ck">VALUES</span> (<span class="cs">'홍길동'</span>, 65, <span class="cs">'DM'</span>);
+
+<span class="cc">-- R: 조회</span>
+<span class="ck">SELECT</span> * <span class="ck">FROM</span> patients <span class="ck">WHERE</span> age >= 60;
+
+<span class="cc">-- U: 수정</span>
+<span class="ck">UPDATE</span> patients <span class="ck">SET</span> diet = <span class="cs">'당뇨식'</span> <span class="ck">WHERE</span> name = <span class="cs">'홍길동'</span>;
+
+<span class="cc">-- D: 삭제</span>
+<span class="ck">DELETE FROM</span> patients <span class="ck">WHERE</span> id = 1;</pre>
+  </div>
+</div>
+
+<div class="cr-divider"></div>
+
+<!-- ═══ 02 CREATE ═══ -->
+<div class="cr-section" id="cr-create">
+  <div class="cr-section-num">02 — CREATE</div>
+  <div class="cr-h2">CREATE란 무엇인가</div>
+  <p class="cr-p">CREATE는 <strong>테이블의 구조(틀)를 만드는 명령어</strong>입니다. INSERT로 데이터를 넣기 전에 반드시 CREATE로 테이블을 먼저 만들어야 합니다. 엑셀로 치면 시트를 만들고 열 이름을 정하는 것입니다.</p>
+
+  <div class="cr-h3">기본 문법</div>
+  <div class="cr-code">
+    <div class="cr-code-header">
+      <span class="cr-code-lang">SQL — CREATE TABLE</span>
+      <div class="cr-code-dots"><div class="cr-code-dot" style="background:#f85149"></div><div class="cr-code-dot" style="background:#ffa657"></div><div class="cr-code-dot" style="background:#3fb950"></div></div>
+    </div>
+    <pre><span class="ck">CREATE TABLE</span> patients (
+    id          <span class="cn">INT</span>           <span class="ck">PRIMARY KEY</span> <span class="ck">AUTO_INCREMENT</span>,
+    name        <span class="cn">VARCHAR</span>(50)   <span class="ck">NOT NULL</span>,
+    age         <span class="cn">INT</span>,
+    dx          <span class="cn">VARCHAR</span>(100),
+    diet        <span class="cn">VARCHAR</span>(50)   <span class="ck">DEFAULT</span> <span class="cs">'일반식'</span>,
+    created_at  <span class="cn">DATETIME</span>      <span class="ck">DEFAULT</span> <span class="cf">NOW</span>()
+);
+
+<span class="cc">-- 테이블이 이미 있으면 에러 방지</span>
+<span class="ck">CREATE TABLE IF NOT EXISTS</span> patients ( ... );</pre>
+  </div>
+
+  <div class="cr-h3">주요 데이터 타입</div>
+  <div class="cr-dtype-grid">
+    <div class="cr-dtype-item">
+      <div class="cr-dtype-name">INT</div>
+      <div class="cr-dtype-desc">정수값. 나이, ID, 개수 등에 사용합니다.</div>
+      <div class="cr-dtype-ex">예: age INT → 65, 42, 78</div>
+    </div>
+    <div class="cr-dtype-item">
+      <div class="cr-dtype-name">VARCHAR(n)</div>
+      <div class="cr-dtype-desc">최대 n자까지 저장하는 가변 길이 문자열. 실제 입력된 길이만큼만 공간 사용합니다.</div>
+      <div class="cr-dtype-ex">예: name VARCHAR(50) → '홍길동'</div>
+    </div>
+    <div class="cr-dtype-item">
+      <div class="cr-dtype-name">TEXT</div>
+      <div class="cr-dtype-desc">긴 텍스트. 차팅 내용, 메모처럼 길이 예측이 어려운 내용에 사용합니다.</div>
+      <div class="cr-dtype-ex">예: notes TEXT → 긴 간호 기록</div>
+    </div>
+    <div class="cr-dtype-item">
+      <div class="cr-dtype-name">DATETIME</div>
+      <div class="cr-dtype-desc">날짜와 시간 저장. 입원일, 처방 시각 등에 사용합니다.</div>
+      <div class="cr-dtype-ex">예: 2025-01-15 14:30:00</div>
+    </div>
+    <div class="cr-dtype-item">
+      <div class="cr-dtype-name">BOOLEAN</div>
+      <div class="cr-dtype-desc">참/거짓. 퇴원 여부, 활성 상태 등 이진 값에 사용합니다.</div>
+      <div class="cr-dtype-ex">예: is_discharged BOOLEAN → true/false</div>
+    </div>
+    <div class="cr-dtype-item">
+      <div class="cr-dtype-name">DECIMAL(p, s)</div>
+      <div class="cr-dtype-desc">소수점이 필요한 정밀한 숫자. 약품 용량, 체중 등에 사용합니다.</div>
+      <div class="cr-dtype-ex">예: weight DECIMAL(5,2) → 72.50</div>
+    </div>
+  </div>
+
+  <div class="cr-h3">제약조건 (Constraints)</div>
+  <p class="cr-p">제약조건은 데이터의 <strong>무결성을 보장하는 규칙</strong>입니다. 잘못된 데이터가 들어오는 것을 DB 레벨에서 막아줍니다.</p>
+  <ul class="cr-constraint-list">
+    <li><span class="cr-constraint-kw">PRIMARY KEY</span><span class="cr-constraint-desc">각 행을 유일하게 구별하는 기본키. NOT NULL + UNIQUE가 자동 적용됩니다.</span></li>
+    <li><span class="cr-constraint-kw">AUTO_INCREMENT</span><span class="cr-constraint-desc">새 행이 삽입될 때 자동으로 1씩 증가. id 컬럼에 주로 사용합니다.</span></li>
+    <li><span class="cr-constraint-kw">NOT NULL</span><span class="cr-constraint-desc">NULL 값을 허용하지 않습니다. 반드시 값을 입력해야 하는 컬럼에 사용합니다.</span></li>
+    <li><span class="cr-constraint-kw">DEFAULT 값</span><span class="cr-constraint-desc">값을 입력하지 않으면 지정한 기본값이 자동으로 들어갑니다.</span></li>
+    <li><span class="cr-constraint-kw">UNIQUE</span><span class="cr-constraint-desc">중복 값을 허용하지 않습니다. 이메일, 면허번호 등에 사용합니다.</span></li>
+    <li><span class="cr-constraint-kw">FOREIGN KEY</span><span class="cr-constraint-desc">다른 테이블의 PK를 참조하여 테이블 간 관계를 설정합니다.</span></li>
+  </ul>
+
+  <div class="cr-code">
+    <div class="cr-code-header">
+      <span class="cr-code-lang">SQL — 실제 병원 테이블 예시</span>
+      <div class="cr-code-dots"><div class="cr-code-dot" style="background:#f85149"></div><div class="cr-code-dot" style="background:#ffa657"></div><div class="cr-code-dot" style="background:#3fb950"></div></div>
+    </div>
+    <pre><span class="ck">CREATE TABLE</span> prescriptions (
+    id          <span class="cn">INT</span>           <span class="ck">PRIMARY KEY</span> <span class="ck">AUTO_INCREMENT</span>,
+    patient_id  <span class="cn">INT</span>           <span class="ck">NOT NULL</span>,
+    doctor_id   <span class="cn">INT</span>           <span class="ck">NOT NULL</span>,
+    medication  <span class="cn">VARCHAR</span>(100)  <span class="ck">NOT NULL</span>,
+    dosage      <span class="cn">VARCHAR</span>(50),
+    issued_at   <span class="cn">DATETIME</span>      <span class="ck">DEFAULT</span> <span class="cf">NOW</span>(),
+
+    <span class="cc">-- FK: 다른 테이블과 관계 설정</span>
+    <span class="ck">FOREIGN KEY</span> (patient_id) <span class="ck">REFERENCES</span> patients(id),
+    <span class="ck">FOREIGN KEY</span> (doctor_id)  <span class="ck">REFERENCES</span> doctors(id)
+);</pre>
+  </div>
+
+  <div class="cr-callout">
+    <p><strong>ERD → CREATE 순서:</strong> ERD로 테이블 구조를 설계한 뒤, CREATE TABLE로 실제 DB에 구현합니다. FK가 있는 테이블은 참조하는 테이블(patients, doctors)을 먼저 CREATE해야 합니다.</p>
+  </div>
+</div>
+
+<div class="cr-divider"></div>
+
+<!-- ═══ 03 INSERT ═══ -->
+<div class="cr-section" id="cr-insert">
+  <div class="cr-section-num">03 — INSERT</div>
+  <div class="cr-h2">INSERT란 무엇인가</div>
+  <p class="cr-p">INSERT는 CREATE로 만든 테이블에 <strong>실제 데이터를 삽입하는 명령어</strong>입니다. CRUD의 C(Create)에 해당합니다.</p>
+
+  <div class="cr-h3">기본 문법</div>
+  <div class="cr-code">
+    <div class="cr-code-header">
+      <span class="cr-code-lang">SQL — INSERT INTO</span>
+      <div class="cr-code-dots"><div class="cr-code-dot" style="background:#f85149"></div><div class="cr-code-dot" style="background:#ffa657"></div><div class="cr-code-dot" style="background:#3fb950"></div></div>
+    </div>
+    <pre><span class="cc">-- 기본 INSERT: 컬럼 명시</span>
+<span class="ck">INSERT INTO</span> patients (name, age, dx, diet)
+<span class="ck">VALUES</span> (<span class="cs">'홍길동'</span>, 65, <span class="cs">'DM, HTN'</span>, <span class="cs">'당뇨식'</span>);
+
+<span class="cc">-- id, created_at은 AUTO_INCREMENT / DEFAULT로 자동 처리</span>
+
+<span class="cc">-- 여러 행 한 번에 INSERT</span>
+<span class="ck">INSERT INTO</span> patients (name, age, dx, diet)
+<span class="ck">VALUES</span>
+    (<span class="cs">'이영희'</span>, 42, <span class="cs">'HTN'</span>,  <span class="cs">'저염식'</span>),
+    (<span class="cs">'김철수'</span>, 78, <span class="cs">'DM'</span>,   <span class="cs">'당뇨식'</span>),
+    (<span class="cs">'박민준'</span>, 55, <span class="cs">'일반'</span>, <span class="cs">'일반식'</span>);
+
+<span class="cc">-- 전체 컬럼 순서대로 넣을 때는 컬럼명 생략 가능 (비권장)</span>
+<span class="ck">INSERT INTO</span> patients
+<span class="ck">VALUES</span> (<span class="cn">DEFAULT</span>, <span class="cs">'최수연'</span>, 61, <span class="cs">'DM'</span>, <span class="cs">'당뇨식'</span>, <span class="cn">DEFAULT</span>);</pre>
+  </div>
+
+  <div class="cr-callout tip">
+    <p><strong>컬럼명을 명시하는 게 좋은 이유:</strong> 컬럼 순서가 바뀌거나 새 컬럼이 추가돼도 기존 INSERT가 깨지지 않습니다. 실무에서는 항상 컬럼명을 명시합니다.</p>
+  </div>
+
+  <div class="cr-h3">INSERT 시뮬레이터</div>
+  <p class="cr-p">아래 폼에 값을 입력하고 INSERT 버튼을 누르면 실제 SQL이 생성되고 테이블에 추가됩니다.</p>
+
+  <div class="cr-insert-form">
+    <div class="cr-form-title">INSERT INTO patients — 환자 등록 시뮬레이터</div>
+    <div class="cr-form-grid">
+      <div class="cr-form-group">
+        <label class="cr-form-label">name (환자명)</label>
+        <input class="cr-form-input" id="cr-inp-name" type="text" placeholder="홍길동">
+      </div>
+      <div class="cr-form-group">
+        <label class="cr-form-label">age (나이)</label>
+        <input class="cr-form-input" id="cr-inp-age" type="number" placeholder="65" min="0" max="120">
+      </div>
+      <div class="cr-form-group">
+        <label class="cr-form-label">dx (진단명)</label>
+        <input class="cr-form-input" id="cr-inp-dx" type="text" placeholder="DM, HTN">
+      </div>
+      <div class="cr-form-group">
+        <label class="cr-form-label">diet (식이)</label>
+        <select class="cr-form-select" id="cr-inp-diet">
+          <option value="일반식">일반식 (DEFAULT)</option>
+          <option value="당뇨식">당뇨식</option>
+          <option value="저염식">저염식</option>
+          <option value="유동식">유동식</option>
+        </select>
+      </div>
+    </div>
+    <button class="cr-insert-btn" onclick="crDoInsert()">▶ INSERT 실행</button>
+    <div class="cr-sql-preview" id="cr-sql-preview"><span style="color:#6e7681">-- 입력 후 INSERT 버튼을 누르면 실행된 SQL이 표시됩니다</span></div>
+    <div class="cr-result-table-wrap">
+      <div style="font-family:'Courier New',monospace;font-size:11px;color:#58a6ff;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">patients 테이블</div>
+      <table class="cr-result-table">
+        <thead><tr><th>id</th><th>name</th><th>age</th><th>dx</th><th>diet</th><th>created_at</th></tr></thead>
+        <tbody id="cr-result-tbody">
+          <tr><td>1</td><td>홍길동</td><td>65</td><td>DM, HTN</td><td>당뇨식</td><td>2025-01-15 09:00</td></tr>
+          <tr><td>2</td><td>이영희</td><td>42</td><td>HTN</td><td>저염식</td><td>2025-01-15 10:30</td></tr>
+          <tr><td>3</td><td>김철수</td><td>78</td><td>DM</td><td>당뇨식</td><td>2025-01-15 11:00</td></tr>
+        </tbody>
+      </table>
+      <div class="cr-result-count" id="cr-result-count">3개 행</div>
+    </div>
+  </div>
+
+  <div class="cr-callout warn">
+    <p><strong>주의:</strong> INSERT 시 NOT NULL 컬럼에 값을 넣지 않으면 에러가 발생합니다. name 컬럼이 NOT NULL이라면 반드시 값을 입력해야 합니다.</p>
+  </div>
+
+  <div class="cr-code">
+    <div class="cr-code-header">
+      <span class="cr-code-lang">SQL — INSERT 에러 상황</span>
+      <div class="cr-code-dots"><div class="cr-code-dot" style="background:#f85149"></div><div class="cr-code-dot" style="background:#ffa657"></div><div class="cr-code-dot" style="background:#3fb950"></div></div>
+    </div>
+    <pre><span class="cc">-- ✗ NOT NULL 컬럼에 NULL 삽입 → 에러</span>
+<span class="ck">INSERT INTO</span> patients (name, age)
+<span class="ck">VALUES</span> (<span class="cn">NULL</span>, 65);
+<span class="cc">-- ERROR: Column 'name' cannot be null</span>
+
+<span class="cc">-- ✗ FK 참조 대상이 없을 때 → 에러</span>
+<span class="ck">INSERT INTO</span> prescriptions (patient_id, medication)
+<span class="ck">VALUES</span> (9999, <span class="cs">'Amoxicillin'</span>);
+<span class="cc">-- ERROR: Cannot add or update a child row: foreign key constraint fails</span>
+
+<span class="cc">-- ✓ 올바른 INSERT</span>
+<span class="ck">INSERT INTO</span> patients (name, age, dx)
+<span class="ck">VALUES</span> (<span class="cs">'최수연'</span>, 61, <span class="cs">'DM'</span>);
+<span class="cc">-- Query OK, 1 row affected</span></pre>
+  </div>
+</div>
+
+<div class="cr-divider"></div>
+
+<!-- ═══ 04 실습 ═══ -->
+<div class="cr-section" id="cr-practice">
+  <div class="cr-section-num">04 — 실습</div>
+  <div class="cr-h2">실습 코드</div>
+  <p class="cr-p">아래 순서대로 직접 실행해보세요. 인수인계 시스템의 patients 테이블을 처음부터 만들어봅니다.</p>
+
+  <div class="cr-practice">
+    <div class="cr-practice-title">실습 순서</div>
+    <ol>
+      <li><code>CREATE TABLE</code>로 patients 테이블 구조 생성</li>
+      <li><code>INSERT</code>로 환자 5명 데이터 삽입</li>
+      <li><code>SELECT *</code>로 삽입된 데이터 확인</li>
+      <li>컬럼명 생략 INSERT와 명시 INSERT 차이 직접 확인</li>
+      <li>NOT NULL 위반 INSERT를 일부러 시도해서 에러 메시지 확인</li>
+    </ol>
+  </div>
+
+  <div class="cr-code">
+    <div class="cr-code-header">
+      <span class="cr-code-lang">SQL — 전체 실습 코드</span>
+      <div class="cr-code-dots"><div class="cr-code-dot" style="background:#f85149"></div><div class="cr-code-dot" style="background:#ffa657"></div><div class="cr-code-dot" style="background:#3fb950"></div></div>
+    </div>
+    <pre><span class="cc">-- STEP 1: 테이블 생성</span>
+<span class="ck">CREATE TABLE IF NOT EXISTS</span> patients (
+    id          <span class="cn">INT</span>          <span class="ck">PRIMARY KEY</span> <span class="ck">AUTO_INCREMENT</span>,
+    name        <span class="cn">VARCHAR</span>(50)  <span class="ck">NOT NULL</span>,
+    age         <span class="cn">INT</span>,
+    dx          <span class="cn">VARCHAR</span>(100),
+    diet        <span class="cn">VARCHAR</span>(50)  <span class="ck">DEFAULT</span> <span class="cs">'일반식'</span>,
+    created_at  <span class="cn">DATETIME</span>     <span class="ck">DEFAULT</span> <span class="cf">NOW</span>()
+);
+
+<span class="cc">-- STEP 2: 환자 데이터 삽입</span>
+<span class="ck">INSERT INTO</span> patients (name, age, dx, diet)
+<span class="ck">VALUES</span>
+    (<span class="cs">'홍길동'</span>, 65, <span class="cs">'DM, HTN'</span>, <span class="cs">'당뇨식'</span>),
+    (<span class="cs">'이영희'</span>, 42, <span class="cs">'HTN'</span>,     <span class="cs">'저염식'</span>),
+    (<span class="cs">'김철수'</span>, 78, <span class="cs">'DM'</span>,      <span class="cs">'당뇨식'</span>),
+    (<span class="cs">'박민준'</span>, 55, <span class="cs">'일반'</span>,    <span class="cs">'일반식'</span>),
+    (<span class="cs">'최수연'</span>, 61, <span class="cs">'DM'</span>,      <span class="cs">'당뇨식'</span>);
+
+<span class="cc">-- STEP 3: 확인</span>
+<span class="ck">SELECT</span> * <span class="ck">FROM</span> patients;
+
+<span class="cc">-- STEP 4: diet를 입력하지 않으면 DEFAULT '일반식'이 들어감</span>
+<span class="ck">INSERT INTO</span> patients (name, age, dx)
+<span class="ck">VALUES</span> (<span class="cs">'테스트'</span>, 30, <span class="cs">'일반'</span>);
+
+<span class="ck">SELECT</span> * <span class="ck">FROM</span> patients <span class="ck">WHERE</span> name = <span class="cs">'테스트'</span>;
+<span class="cc">-- diet 컬럼이 '일반식'으로 자동 입력됨을 확인</span>
+
+<span class="cc">-- STEP 5: NOT NULL 위반 (에러 확인용)</span>
+<span class="ck">INSERT INTO</span> patients (name, age)
+<span class="ck">VALUES</span> (<span class="cn">NULL</span>, 30);
+<span class="cc">-- ERROR: Column 'name' cannot be null</span></pre>
+  </div>
+</div>
+
+</div><!-- /cr-main -->
+
+<div class="cr-footer">
+  <span>CRUD · CREATE · INSERT — SQL Fundamentals</span>
+  <span>팀원4 발표자료 · 2025</span>
+</div>
+
+</div><!-- /cr-wrap -->
+
+<script>
+var crNextId = 4;
+var crRows = [
+  {id:1,name:'홍길동',age:65,dx:'DM, HTN',diet:'당뇨식',created_at:'2025-01-15 09:00'},
+  {id:2,name:'이영희',age:42,dx:'HTN',diet:'저염식',created_at:'2025-01-15 10:30'},
+  {id:3,name:'김철수',age:78,dx:'DM',diet:'당뇨식',created_at:'2025-01-15 11:00'}
+];
+
+function crNow(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+
+function crEscape(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function crRenderSQL(name,age,dx,diet){
+  return '<span style="color:#ff7b72">INSERT INTO</span> patients (name, age, dx, diet)\n'
+       + '<span style="color:#ff7b72">VALUES</span> ('
+       + '<span style="color:#a5d6ff">\''+crEscape(name)+'\'</span>, '
+       + '<span style="color:#ffa657">'+crEscape(age)+'</span>, '
+       + '<span style="color:#a5d6ff">\''+crEscape(dx)+'\'</span>, '
+       + '<span style="color:#a5d6ff">\''+crEscape(diet)+'\'</span>);\n'
+       + '<span style="color:#6e7681;font-style:italic">-- Query OK, 1 row affected</span>';
+}
+
+function crRenderTable(){
+  var tbody = document.getElementById('cr-result-tbody');
+  tbody.innerHTML = crRows.map(function(r,i){
+    var isNew = i === crRows.length-1 && crRows.length > 3;
+    return '<tr'+(isNew?' class="new-row"':'')+'>'
+      +'<td>'+r.id+'</td>'
+      +'<td>'+crEscape(r.name)+'</td>'
+      +'<td>'+r.age+'</td>'
+      +'<td>'+crEscape(r.dx)+'</td>'
+      +'<td>'+crEscape(r.diet)+'</td>'
+      +'<td>'+r.created_at+'</td>'
+      +'</tr>';
+  }).join('');
+  document.getElementById('cr-result-count').textContent = crRows.length + '개 행';
+}
+
+function crDoInsert(){
+  var name = document.getElementById('cr-inp-name').value.trim();
+  var age  = document.getElementById('cr-inp-age').value.trim();
+  var dx   = document.getElementById('cr-inp-dx').value.trim();
+  var diet = document.getElementById('cr-inp-diet').value;
+
+  var preview = document.getElementById('cr-sql-preview');
+
+  if(!name){
+    preview.innerHTML = '<span style="color:#f85149">-- ERROR: Column \'name\' cannot be null (NOT NULL 제약조건 위반)</span>';
+    return;
+  }
+  if(!age){ age = 'NULL'; }
+  if(!dx){ dx = '미상'; }
+
+  preview.innerHTML = crRenderSQL(name, age, dx, diet);
+
+  var newRow = {
+    id: crNextId++,
+    name: name,
+    age: age,
+    dx: dx,
+    diet: diet,
+    created_at: crNow()
+  };
+  crRows.push(newRow);
+  crRenderTable();
+
+  document.getElementById('cr-inp-name').value = '';
+  document.getElementById('cr-inp-age').value  = '';
+  document.getElementById('cr-inp-dx').value   = '';
+}
+</script>
